@@ -1,1 +1,1 @@
-{"root":["./src/env.d.ts","./src/index.ts","./src/controllers/auth.controller.ts","./src/lib/db.ts","./src/lib/util.ts","./src/lib/zod.ts","./src/models/user.model.ts","./src/routes/auth.route.ts"],"version":"5.8.3"}
+{"root":["./src/env.d.ts","./src/index.ts","./src/controllers/auth.controller.ts","./src/lib/cloudinary.ts","./src/lib/db.ts","./src/lib/util.ts","./src/lib/zod.ts","./src/middleware/auth.middleware.ts","./src/models/user.model.ts","./src/routes/auth.route.ts"],"version":"5.8.3"}
