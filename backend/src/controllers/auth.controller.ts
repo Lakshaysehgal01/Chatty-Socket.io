@@ -99,8 +99,7 @@ export const logout = (req: Request, res: Response) => {
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const { profilePic } = req.body;
-    //@ts-ignore
-    const userId = req.user._id;
+    const userId = req.user?._id;
     if (!profilePic) {
       res.status(400).json({
         message: "Profile pic is required",
@@ -126,7 +125,6 @@ export const updateProfile = async (req: Request, res: Response) => {
 
 export const checkAuth = (req: Request, res: Response) => {
   try {
-    //@ts-ignore
     res.status(200).json(req.user);
   } catch (e) {
     console.log(e);
