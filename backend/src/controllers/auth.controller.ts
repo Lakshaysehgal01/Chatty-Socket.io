@@ -34,11 +34,11 @@ export const signup = async (req: Request, res: Response) => {
     });
     if (newUser) {
       generateToken(newUser._id, res);
-      res.status(201).json({
-        _id: newUser._id,
-        fullName: newUser.fullName,
-        profilePic: newUser.profilePic,
-      });
+      const userWithoutPassword = newUser.toObject() as {
+        [key: string]: any;
+      };
+      delete userWithoutPassword.password;
+      res.status(201).json(userWithoutPassword);
     } else {
       res.status(400).json({
         message: "Invalid user details ",
@@ -74,9 +74,11 @@ export const login = async (req: Request, res: Response) => {
       return;
     }
     generateToken(existingUser._id, res);
-    res.status(200).json({
-      message: "Login succesfull",
-    });
+    const userWithoutPassword = existingUser.toObject() as {
+      [key: string]: any;
+    };
+    delete userWithoutPassword.password;
+    res.status(200).json(userWithoutPassword);
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Internal server error " });
