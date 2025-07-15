@@ -8,6 +8,13 @@ type AuthUser = {
   _id: string;
   fullName: string;
   profilePic: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type UpdateProfileData = {
+  profilePic: string;
 };
 
 interface AuthStore {
@@ -20,6 +27,7 @@ interface AuthStore {
   signup: (data: FormProps) => Promise<void>;
   logout: () => Promise<void>;
   login: (data: LoginProps) => Promise<void>;
+  updateProfile: (data: UpdateProfileData) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -45,6 +53,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set({ isSigningUp: true });
     try {
       const res = await axiosInstance.post("/auth/signup", data);
+      console.log("signup");
+      console.log(res.data);
       set({ authUser: res.data });
       toast.success("Account created Successfully");
     } catch (error) {
@@ -54,6 +64,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({ isSigningUp: false });
     }
   },
+
   logout: async () => {
     try {
       await axiosInstance.post("/auth/logout");
@@ -63,10 +74,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
       console.log("Error in logout :" + error);
     }
   },
+
   login: async (data: LoginProps) => {
     set({ isSigningUp: true });
     try {
       const res = await axiosInstance.post("/auth/login", data);
+      console.log("login");
+      console.log(res.data);
       set({ authUser: res.data });
       toast.success("Logged in Successfully");
     } catch (error) {
@@ -74,6 +88,20 @@ export const useAuthStore = create<AuthStore>((set) => ({
       toast.error("Error while login ");
     } finally {
       set({ isSigningUp: false });
+    }
+  },
+
+  updateProfile: async (data: UpdateProfileData) => {
+    set({ isUpdatingProfile: true });
+    try {
+      const res = await axiosInstance.put("/auth/profile-update", data);
+      set({ authUser: res.data });
+      toast.success("Profile pic Updated");
+    } catch (error) {
+      console.log("Error in updating " + error);
+      toast.error("Error while Uploading pic");
+    } finally {
+      set({ isUpdatingProfile: false });
     }
   },
 }));
