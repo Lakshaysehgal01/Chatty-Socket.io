@@ -17,6 +17,12 @@ type Message = {
   receiverId: string;
   text: string;
   image: string;
+  createdAt: string;
+};
+
+type SendMessageProps = {
+  text: string;
+  image: string;
 };
 
 interface ChatStore {
@@ -27,10 +33,11 @@ interface ChatStore {
   isMessageLoading: boolean;
   getUser: () => Promise<void>;
   getMessages: (userId: string) => Promise<void>;
-  setSelectedUser: (user: User) => void;
+  setSelectedUser: (user: User | null) => void;
+  sendMessage: (data: SendMessageProps) => Promise<void>;
 }
 
-export const useChatStore = create<ChatStore>((set) => ({
+export const useChatStore = create<ChatStore>((set, get) => ({
   messages: [],
   users: [],
   selectedUser: null,
@@ -65,5 +72,16 @@ export const useChatStore = create<ChatStore>((set) => ({
 
   setSelectedUser: (user) => {
     set({ selectedUser: user });
+  },
+
+  sendMessage: async (data) => {
+    const { selectedUser, messages } = get();
+    try {
+      const res = await axiosInstance.post(
+        `/message/send/${selectedUser?._id}`,
+        data
+      );
+      set({ messages: [...messages, res.data] });
+    } catch (error) {}
   },
 }));
