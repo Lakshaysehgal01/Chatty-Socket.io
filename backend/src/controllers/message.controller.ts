@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { User } from "../models/user.model";
 import { Message } from "../models/message.model";
 import cloudinary from "../lib/cloudinary";
+import { getUserSocketId, io } from "../lib/socket";
 
 export const UsersForSidebar = async (req: Request, res: Response) => {
   try {
@@ -51,7 +52,7 @@ export const sendMessage = async (req: Request, res: Response) => {
       imageUrl = Uploadresponse.secure_url;
     }
 
-    const newMessage =await Message.create({
+    const newMessage = await Message.create({
       senderId,
       recieverId,
       text,
@@ -59,7 +60,10 @@ export const sendMessage = async (req: Request, res: Response) => {
     });
 
     //socket.io work
-
+    const receiverSocketId = getUserSocketId(recieverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("message", newMessage);
+    }
     res.status(201).json(newMessage);
   } catch (e) {
     console.log(e);
