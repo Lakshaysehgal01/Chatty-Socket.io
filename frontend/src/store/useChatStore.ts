@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import { toast } from "sonner";
+import { useAuthStore } from "./useAuthStore";
 
 type User = {
   _id: string;
@@ -35,6 +36,8 @@ interface ChatStore {
   getMessages: (userId: string) => Promise<void>;
   setSelectedUser: (user: User | null) => void;
   sendMessage: (data: SendMessageProps) => Promise<void>;
+  subscribeToMessage: () => void;
+  unSubscribeToMessage: () => void;
 }
 
 export const useChatStore = create<ChatStore>((set, get) => ({
@@ -83,5 +86,20 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       );
       set({ messages: [...messages, res.data] });
     } catch (error) {}
+  },
+
+  subscribeToMessage: () => {
+    const { selectedUser } = get();
+    if (!selectedUser) return;
+    const socket = useAuthStore.getState().socket;
+    socket?.on("message", (msg: Message) => {
+      if (msg.senderId !== selectedUser._id) return;
+      set({ messages: [...get().messages, msg] });
+    });
+  },
+
+  unSubscribeToMessage: () => {
+    const socket = useAuthStore.getState().socket;
+    socket?.off("message");
   },
 }));
