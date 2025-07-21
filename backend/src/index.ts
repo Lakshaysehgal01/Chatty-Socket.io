@@ -15,7 +15,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "https://chatty-6.netlify.app/",
+    origin: "https://chatty-6.netlify.app",
     credentials: true,
   })
 );

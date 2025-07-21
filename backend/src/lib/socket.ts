@@ -15,7 +15,7 @@ export function getUserSocketId(userId: string): string {
 
 const io = new Server(server, {
   cors: {
-    origin: ["https://chatty-6.netlify.app/"],
+    origin: ["https://chatty-6.netlify.app"],
   },
 });
 
