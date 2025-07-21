@@ -35,7 +35,7 @@ interface AuthStore {
   disconnectSocket: () => void;
 }
 
-const Base_Url = "http://localhost:8080";
+const Base_Url = "https://chatty-socket-io.onrender.com";
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
   socket: null,

@@ -15,7 +15,9 @@ function App() {
   const { checkAuth, authUser, isCheckingAuth } = useAuthStore();
   const { theme } = useThemeStore();
   useEffect(() => {
-    checkAuth();
+    setTimeout(() => {
+      checkAuth();
+    }, 2000);
   }, [checkAuth]);
   if (isCheckingAuth && !authUser) {
     return (
